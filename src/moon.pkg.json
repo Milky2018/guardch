@@ -1,0 +1,5 @@
+{
+  "import": [
+    {"path": "Milky2018/toolkit", "alias": "kit"}
+  ]
+}

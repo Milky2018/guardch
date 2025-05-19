@@ -1,0 +1,16 @@
+package "Milky2018/guardch"
+
+// Values
+
+// Types and methods
+type GuardChannel[T]
+impl GuardChannel {
+  new[T]() -> Self[T]
+  recv[T](Self[T], (T) -> Bool) -> T
+  send[T](Self[T], T) -> Unit
+}
+
+// Type aliases
+
+// Traits
+
