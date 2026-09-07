@@ -5,12 +5,12 @@ struct GuardChannel[T] {
 }
 
 ///|
-pub fn GuardChannel::new[T]() -> GuardChannel[T] {
-  { consumers: [], buffer: [] }
+pub fn[T] GuardChannel::new() -> GuardChannel[T] {
+  { consumers: [], buffer: [], }
 }
 
 ///|
-pub fn GuardChannel::send[T](self : GuardChannel[T], v : T) -> Unit {
+pub fn[T] GuardChannel::send(self : GuardChannel[T], v : T) -> Unit {
   if self.consumers.length() > 0 {
     for i, consumer in self.consumers {
       let (c, pred) = consumer
@@ -24,9 +24,9 @@ pub fn GuardChannel::send[T](self : GuardChannel[T], v : T) -> Unit {
 }
 
 ///|
-pub async fn GuardChannel::recv[T](
+pub async fn[T] GuardChannel::recv(
   self : GuardChannel[T],
-  pred : (T) -> Bool
+  pred : (T) -> Bool,
 ) -> T {
   if self.buffer.length() > 0 {
     for i, v in self.buffer {
@@ -36,7 +36,7 @@ pub async fn GuardChannel::recv[T](
       }
     }
   }
-  @kit.suspend!(fn(k) { self.consumers.push((k, pred)) })
+  @kit.suspend(fn(k) { self.consumers.push((k, pred)) })
 }
 
 ///|
@@ -46,10 +46,10 @@ test "Simple usage" {
   ch.send(0)
   let mut v1 = None
   let mut v2 = None
-  @kit.run_async(fn() {
-    v1 = Some(ch.recv!(fn(v) { v % 2 == 0 }))
-    v2 = Some(ch.recv!(fn(v) { v % 2 == 1 }))
+  @kit.run_async(() => {
+    v1 = Some(ch.recv(fn(v) { v % 2 == 0 }))
+    v2 = Some(ch.recv(fn(v) { v % 2 == 1 }))
   })
-  assert_eq!(v1, Some(0))
-  assert_eq!(v2, Some(1))
+  assert_eq(v1, Some(0))
+  assert_eq(v2, Some(1))
 }
